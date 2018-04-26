@@ -26,6 +26,7 @@ object benchmark {
 	val funOrder = Array("existUser", "createUser", "getUser", "listUser")
 	val emptyItem = Item(null, Typ.Thrpt, null, 0D)
 
+	// 主函数	
 	def main(args : Array[String]) : Unit = {
 		installBenchmarkBase()
 
@@ -39,11 +40,11 @@ object benchmark {
 
 		report()
 	}
-
+	//step 1 执行benchmark-base 下的目录
 	def installBenchmarkBase() {
 		exec("benchmark-base", "mvn clean install")
 	}
-
+	// stepm2 获取全部文件夹
 	def getAllTasks() : Array[String] = {
 		val folder = new File(".")
 
@@ -53,7 +54,7 @@ object benchmark {
 			.map(name => name.substring(0, name.length() - "-client".length()))
 			.sorted
 	}
-
+	//step3 获取的文件名字开始报告
 	def benchmark(taskName : String) {
 		val serverPackage = packageAndGet(new File(taskName + "-server"))
 		val clientPackage = packageAndGet(new File(taskName + "-client"))
@@ -89,7 +90,7 @@ object benchmark {
 			name.substring(0, name.length() - ".jar".length())
 		}
 	}
-
+	//step4 定义log目录 拷贝到服务端 启动服务
 	def startServer(serverPackage : File) {
 		val name = serverPackage.getName
 		println(s"start $name")
@@ -97,14 +98,14 @@ object benchmark {
 		val resultPath = taskName(serverPackage) + ".log"
 
 		//copy到benchmark-server
-		exec(serverPackage.getParentFile, s"scp ${name} benchmark@benchmark-server:~")
+		exec(serverPackage.getParentFile, s"scp ${name} root@benchmark-server:~")
 
 		//杀掉benchmark-server上的老进程
-		exec(Array("ssh", "benchmark@benchmark-server", "killall java"))
+		exec(Array("ssh", "root@benchmark-server", "killall java"))
 
 		//benchmark-server上启动服务器
 		val remoteCommand = s"nohup ${jvmOps} -jar ${name} >> ${resultPath} &"
-		exec(Array("ssh", "benchmark@benchmark-server", remoteCommand))
+		exec(Array("ssh", "root@benchmark-server", remoteCommand))
 	}
 
 	def stopServer(serverPackage : File) {
@@ -112,7 +113,7 @@ object benchmark {
 		println(s"stop $name")
 
 		//benchmark-server上启动服务器
-		exec(Array("ssh", "benchmark@benchmark-server", "killall java"))
+		exec(Array("ssh", "root@benchmark-server", "killall java"))
 	}
 
 	def startClient(clientPackage : File) {
@@ -127,6 +128,7 @@ object benchmark {
 		exec(clientPackage.getParentFile, command, resultFile)
 	}
 
+	// cmd执行
 	def exec(path : String, command : String) {
 		if (path != null) exec(new File(path), command)
 		else exec(null.asInstanceOf[File], command)
@@ -202,6 +204,7 @@ object benchmark {
 		process.destroy();
 	}
 
+	// 报告执行
 	def report() {
 		val reportFile = new File(resultFolder, "benchmark-report.md")
 		val reportOutput = new FileOutputStream(reportFile)

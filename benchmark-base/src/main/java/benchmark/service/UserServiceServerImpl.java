@@ -1,7 +1,7 @@
 package benchmark.service;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
+//import java.time.LocalDate;
+//import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -37,13 +37,13 @@ public class UserServiceServerImpl implements UserService {
 		user.setId(id);
 		user.setName(new String("Doug Lea"));
 		user.setSex(1);
-		user.setBirthday(LocalDate.of(1968, 12, 8));
+		//user.setBirthday(LocalDate.of(1968, 12, 8));
 		user.setEmail(new String("dong.lea@gmail.com"));
 		user.setMobile(new String("18612345678"));
 		user.setAddress(new String("北京市 中关村 中关村大街1号 鼎好大厦 1605"));
 		user.setIcon(new String("https://www.baidu.com/img/bd_logo1.png"));
 		user.setStatus(1);
-		user.setCreateTime(LocalDateTime.now());
+		user.setCreateTime(new Date());
 		user.setUpdateTime(user.getCreateTime());
 
 		List<Integer> permissions = new ArrayList<Integer>(
@@ -64,13 +64,13 @@ public class UserServiceServerImpl implements UserService {
 			user.setId(i);
 			user.setName("Doug Lea" + i);
 			user.setSex(1);
-			user.setBirthday(LocalDate.of(1968, 12, 8));
+			//user.setBirthday(LocalDate.of(1968, 12, 8));
 			user.setEmail("dong.lea@gmail.com" + i);
 			user.setMobile("18612345678" + i);
 			user.setAddress("北京市 中关村 中关村大街1号 鼎好大厦 1605" + i);
 			user.setIcon("https://www.baidu.com/img/bd_logo1.png" + i);
 			user.setStatus(1);
-			user.setCreateTime(LocalDateTime.now());
+			user.setCreateTime(new Date());
 			user.setUpdateTime(user.getCreateTime());
 
 			List<Integer> permissions = new ArrayList<Integer>(
